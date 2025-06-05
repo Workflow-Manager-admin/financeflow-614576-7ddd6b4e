@@ -80,7 +80,7 @@ class RecurringScreen extends StatelessWidget {
                     ),
                   );
 
-                  if (confirmed == true) {
+                  if (confirmed == true && context.mounted) {
                     Provider.of<TransactionProvider>(context, listen: false)
                         .removeTransaction(transaction.id);
                   }

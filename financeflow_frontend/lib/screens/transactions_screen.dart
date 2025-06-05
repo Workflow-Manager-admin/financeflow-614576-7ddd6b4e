@@ -129,7 +129,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               ),
             );
 
-            if (confirmed == true) {
+            if (confirmed == true && context.mounted) {
               Provider.of<TransactionProvider>(context, listen: false)
                   .removeTransaction(transactions[index].id);
             }
