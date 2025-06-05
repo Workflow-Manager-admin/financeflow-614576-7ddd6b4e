@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/colors.dart';
-import '../models/transaction_model.dart';
+
 import '../providers/transaction_provider.dart';
 import '../widgets/transaction_list_item.dart';
 

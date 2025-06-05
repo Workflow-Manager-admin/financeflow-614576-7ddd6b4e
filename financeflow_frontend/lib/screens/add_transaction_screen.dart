@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 import '../core/theme/colors.dart';
 import '../models/transaction_model.dart';
 import '../providers/transaction_provider.dart';
@@ -39,7 +40,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   void _initSpeech() async {
     try {
-      _speechEnabled = await _speechToText.initialize();
+      _speechEnabled = await _speechToText.initialize(
+        onError: (error) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${error.errorMsg}')),
+            );
+          }
+        },
+        debugLogging: true,
+      );
       setState(() {});
     } catch (e) {
       if (mounted) {
@@ -69,17 +79,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               }
             });
           },
-          options: SpeechListenOptions(
+          listenOptions: SpeechListenOptions(
             cancelOnError: true,
             listenMode: ListenMode.confirmation,
+            partialResults: true
           ),
         );
         
-        _speechToText.errorListener = (error) {
+        _speechToText.errorListener = (SpeechRecognitionError error) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Error during voice recognition. Please try again.'),
+              SnackBar(
+                content: Text('Error: ${error.errorMsg}'),
               ),
             );
             setState(() => _isListening = false);
